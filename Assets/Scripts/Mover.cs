@@ -28,8 +28,8 @@ public class Mover : MonoBehaviour
     }
     public void StopMovement ()
     {
-        StopCoroutine(moveCoroutine);
         StopCoroutine(moveQueueCoroutine);
+        StopCoroutine(moveCoroutine);
         movementQueue.Clear();
         IsMoving = false;
     }
@@ -43,9 +43,7 @@ public class Mover : MonoBehaviour
         while (movementQueue.Count > 0)
         {
             if(!IsMoving)
-            {
                 moveCoroutine = (StartCoroutine(translateObject(movementQueue.Dequeue())));
-            }
             yield return moveCoroutine;
         }
     }

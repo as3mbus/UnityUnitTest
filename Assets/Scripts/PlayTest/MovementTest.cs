@@ -17,6 +17,11 @@ namespace Tests
             testObj = new GameObject();
             testMov = testObj.AddComponent<Mover>();
         }
+        [TearDown]
+        public void TearDown()
+        {
+            GameObject.Destroy(testObj);
+        }
         [UnityTest]
         public IEnumerator _01_translateObject()
         {
@@ -31,7 +36,7 @@ namespace Tests
             Vector2 pos = new Vector2(99, 99);
             testMov.TranslateObject(pos);
             yield return new WaitForFixedUpdate();
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(1.5f);
             testMov.StopMovement();
             Vector2 afterStopPos = testObj.transform.position;
             yield return null;
@@ -69,10 +74,22 @@ namespace Tests
             Assert.That(afterStopPos, Is.EqualTo((Vector2)testObj.transform.position));
             Assert.That(testMov.PendingMove, Is.EqualTo(0));
         }
-        [TearDown]
-        public void TearDown()
+        [UnityTest]
+        public IEnumerator _05_NewMovementResetMovementAndEmptyMovementQueue()
         {
-            GameObject.Destroy(testObj);
+            Vector2 pos = new Vector2(99, 99);
+            Vector2 seconMove = new Vector2(-9,-10);
+            Vector2 thirdMove = new Vector2(-3,-7);
+
+            testMov.TranslateObject(pos);
+            testMov.addMove(seconMove);
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(1.5f);
+            testMov.TranslateObject(thirdMove);
+            Vector2 afterStopPos = testObj.transform.position;
+            yield return new WaitUntil(()=>!testMov.IsMoving);
+            Assert.That(afterStopPos - (Vector2) testObj.transform.position, Is.EqualTo(thirdMove));
+            Assert.That(testMov.PendingMove, Is.EqualTo(0));
         }
     }
 }
