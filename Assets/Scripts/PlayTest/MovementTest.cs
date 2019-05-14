@@ -49,11 +49,9 @@ namespace Tests
             testMov.addMove(seconMove);
             yield return new WaitForFixedUpdate();
             yield return new WaitUntil(()=>testMov.PendingMove == 0);
-            Assert.That(Vector2.Distance(testObj.transform.position, firstMoveGoal), Is.LessThanOrEqualTo(0.1));
+            Assert.That(Vector2.Distance(testObj.transform.position, firstMoveGoal), Is.LessThanOrEqualTo(0.3));
             yield return new WaitUntil(()=> !testMov.IsMoving);
             Assert.That(Vector2.Distance(testObj.transform.position, seconMoveGoal), Is.LessThanOrEqualTo(0.1));
-
-
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Mover : MonoBehaviour
@@ -6,6 +7,10 @@ public class Mover : MonoBehaviour
     public float speed;
     public bool IsMoving { get; private set; }
     Coroutine moveCoroutine;
+    Coroutine moveQueueCoroutine;
+    Queue<Vector2> movementQueue = new Queue<Vector2>();
+    public int PendingMove 
+    {get {return movementQueue.Count;}}
     public void TranslateObject (Vector2 movement)
     {
         moveCoroutine = StartCoroutine(translateObject(movement));
@@ -25,5 +30,21 @@ public class Mover : MonoBehaviour
     {
         StopCoroutine(moveCoroutine);
         IsMoving = false;
+    }
+    public void addMove(Vector2 mvmt)
+    {
+        movementQueue.Enqueue(mvmt);
+        moveQueueCoroutine = StartCoroutine(runMovementQueue());
+    }
+    IEnumerator runMovementQueue()
+    {
+        while (movementQueue.Count > 0)
+        {
+            if(!IsMoving)
+            {
+                moveCoroutine = (StartCoroutine(translateObject(movementQueue.Dequeue())));
+            }
+            yield return moveCoroutine;
+        }
     }
 }
