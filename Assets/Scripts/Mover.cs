@@ -29,6 +29,8 @@ public class Mover : MonoBehaviour
     public void StopMovement ()
     {
         StopCoroutine(moveCoroutine);
+        StopCoroutine(moveQueueCoroutine);
+        movementQueue.Clear();
         IsMoving = false;
     }
     public void addMove(Vector2 mvmt)
