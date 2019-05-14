@@ -13,23 +13,25 @@ public class Mover : MonoBehaviour
     {get {return movementQueue.Count;}}
     public void TranslateObject (Vector2 movement)
     {
+        StopMovement();
         moveCoroutine = StartCoroutine(translateObject(movement));
     }
     IEnumerator translateObject(Vector2 movement)
     {
-        Vector2 TargetPos = (Vector2)transform.position + movement;
         IsMoving = true;
-        while (Vector2.Distance((Vector2)transform.position, TargetPos) > 0.1)
+        while (Vector2.Distance((Vector2)transform.position, movement) > 0.1)
         {
-            transform.Translate(movement * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, movement, Time.deltaTime * speed);
             yield return null;
         }
         IsMoving = false;
     }
     public void StopMovement ()
     {
-        StopCoroutine(moveQueueCoroutine);
-        StopCoroutine(moveCoroutine);
+        if(PendingMove > 0)
+            StopCoroutine(moveQueueCoroutine);
+        if(IsMoving)
+            StopCoroutine(moveCoroutine);
         movementQueue.Clear();
         IsMoving = false;
     }
