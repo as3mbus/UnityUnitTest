@@ -10,14 +10,14 @@ public class Mover : MonoBehaviour
     Coroutine moveCoroutine;
     Coroutine moveQueueCoroutine;
     Queue<Vector2> movementQueue = new Queue<Vector2>();
-    public int PendingMove 
-    {get {return movementQueue.Count;}}
-    
-    void TranslateObject (Vector2 movement)
+    public int PendingMove
+    { get { return movementQueue.Count; } }
+
+    void TranslateObject(Vector2 movement)
     {
         moveCoroutine = StartCoroutine(translateObject(movement));
     }
-    public void OverrideTranslateObject (Vector2 movement)
+    public void OverrideTranslateObject(Vector2 movement)
     {
         StopMovement();
         TranslateObject(movement);
@@ -25,6 +25,7 @@ public class Mover : MonoBehaviour
     IEnumerator translateObject(Vector2 movement)
     {
         IsMoving = true;
+        GameObject mark = Instantiate(MoveMark, movement, Quaternion.identity);
         while (Vector2.Distance((Vector2)transform.position, movement) > 0.1)
         {
             transform.position = Vector2.MoveTowards(transform.position, movement, Time.deltaTime * speed);
@@ -32,11 +33,11 @@ public class Mover : MonoBehaviour
         }
         IsMoving = false;
     }
-    public void StopMovement ()
+    public void StopMovement()
     {
-        if(PendingMove > 0)
+        if (PendingMove > 0)
             StopCoroutine(moveQueueCoroutine);
-        if(IsMoving)
+        if (IsMoving)
             StopCoroutine(moveCoroutine);
         movementQueue.Clear();
         IsMoving = false;
@@ -51,7 +52,7 @@ public class Mover : MonoBehaviour
     {
         while (movementQueue.Count > 0)
         {
-            if(!IsMoving)
+            if (!IsMoving)
                 moveCoroutine = (StartCoroutine(translateObject(movementQueue.Dequeue())));
             yield return moveCoroutine;
         }

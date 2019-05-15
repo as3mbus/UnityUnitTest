@@ -10,7 +10,7 @@ namespace Tests
     {
         GameObject testObj;
         Mover testMov;
-        
+        const string clonePostFix = "(Clone)";
         [SetUp]
         public void setup()
         {
@@ -114,7 +114,7 @@ namespace Tests
         {
             Vector2 pos = new Vector2(10, 10);
             testMov.OverrideTranslateObject(pos);
-            Assert.That(GameObject.Find(testMov.MoveMark.name), Is.Not.Null);
+            Assert.That(GameObject.Find(testMov.MoveMark.name+clonePostFix), Is.Not.Null);
         }
     }
 }
