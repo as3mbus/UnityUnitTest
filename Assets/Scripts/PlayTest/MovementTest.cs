@@ -125,5 +125,14 @@ namespace Tests
             yield return new WaitForEndOfFrame();
             Assert.That(GameObject.Find(testMov.MoveMark.name+clonePostFix), Is.Null);
         }
+        [UnityTest]
+        public IEnumerator _08_StoppingMovementClearAllMarks()
+        {
+            Vector2 pos = new Vector2(10, 10);
+            testMov.OverrideTranslateObject(pos);
+            yield return new WaitForEndOfFrame();
+            testMov.StopMovement();
+            Assert.That(GameObject.Find(testMov.MoveMark.name+clonePostFix), Is.Null);
+        }
     }
 }
