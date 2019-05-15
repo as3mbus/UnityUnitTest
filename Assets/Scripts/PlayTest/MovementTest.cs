@@ -116,5 +116,13 @@ namespace Tests
             testMov.OverrideTranslateObject(pos);
             Assert.That(GameObject.Find(testMov.MoveMark.name+clonePostFix), Is.Not.Null);
         }
+        [UnityTest]
+        public IEnumerator _07_MovementCleanUpMarkPrefabAfterDone()
+        {
+            Vector2 pos = new Vector2(10, 10);
+            testMov.OverrideTranslateObject(pos);
+            yield return new WaitUntil(() => !testMov.IsMoving);
+            Assert.That(GameObject.Find(testMov.MoveMark.name+clonePostFix), Is.Null);
+        }
     }
 }
