@@ -48,6 +48,7 @@ public class Mover : MonoBehaviour
     }
     public void addMove(Vector2 mvmt)
     {
+        marksQueue.Enqueue(Instantiate(MoveMark,mvmt, Quaternion.identity));
         movementQueue.Enqueue(mvmt);
         if (PendingMove == 1)
             moveQueueCoroutine = StartCoroutine(runMovementQueue());
