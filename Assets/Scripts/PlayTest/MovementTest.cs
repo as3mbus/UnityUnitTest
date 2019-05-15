@@ -122,6 +122,7 @@ namespace Tests
             Vector2 pos = new Vector2(10, 10);
             testMov.OverrideTranslateObject(pos);
             yield return new WaitUntil(() => !testMov.IsMoving);
+            yield return new WaitForEndOfFrame();
             Assert.That(GameObject.Find(testMov.MoveMark.name+clonePostFix), Is.Null);
         }
     }

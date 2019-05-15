@@ -31,6 +31,7 @@ public class Mover : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, movement, Time.deltaTime * speed);
             yield return null;
         }
+        Destroy(mark);
         IsMoving = false;
     }
     public void StopMovement()
