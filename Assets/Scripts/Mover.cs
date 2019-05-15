@@ -6,6 +6,7 @@ public class Mover : MonoBehaviour
 {
     public float speed;
     public bool IsMoving { get; private set; }
+    public GameObject MoveMark;
     Coroutine moveCoroutine;
     Coroutine moveQueueCoroutine;
     Queue<Vector2> movementQueue = new Queue<Vector2>();

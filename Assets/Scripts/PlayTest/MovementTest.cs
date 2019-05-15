@@ -17,6 +17,7 @@ namespace Tests
             testObj = new GameObject();
             testMov = testObj.AddComponent<Mover>();
             testMov.speed = 5;
+            testMov.MoveMark = Resources.Load("Prefabs/MoveMark") as GameObject;
         }
         [TearDown]
         public void TearDown()
@@ -107,6 +108,13 @@ namespace Tests
             Assert.That(testMov.PendingMove, Is.EqualTo(0));
             yield return new WaitUntil(()=>!testMov.IsMoving);
             Assert.That(Vector2.Distance(testObj.transform.position, thirdMove), Is.LessThan(0.1));
+        }
+        [Test]
+        public void _06_MovementInstantiateMarkPrefab()
+        {
+            Vector2 pos = new Vector2(10, 10);
+            testMov.OverrideTranslateObject(pos);
+            Assert.That(GameObject.Find(testMov.MoveMark.name), Is.Not.Null);
         }
     }
 }
