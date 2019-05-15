@@ -11,10 +11,15 @@ public class Mover : MonoBehaviour
     Queue<Vector2> movementQueue = new Queue<Vector2>();
     public int PendingMove 
     {get {return movementQueue.Count;}}
-    public void TranslateObject (Vector2 movement)
+    
+    void TranslateObject (Vector2 movement)
+    {
+        moveCoroutine = StartCoroutine(translateObject(movement));
+    }
+    public void OverrideTranslateObject (Vector2 movement)
     {
         StopMovement();
-        moveCoroutine = StartCoroutine(translateObject(movement));
+        TranslateObject(movement);
     }
     IEnumerator translateObject(Vector2 movement)
     {
@@ -38,7 +43,8 @@ public class Mover : MonoBehaviour
     public void addMove(Vector2 mvmt)
     {
         movementQueue.Enqueue(mvmt);
-        moveQueueCoroutine = StartCoroutine(runMovementQueue());
+        if (PendingMove == 1)
+            moveQueueCoroutine = StartCoroutine(runMovementQueue());
     }
     IEnumerator runMovementQueue()
     {

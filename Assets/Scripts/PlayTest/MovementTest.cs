@@ -27,7 +27,7 @@ namespace Tests
         public IEnumerator _01_translateObject()
         {
             Vector2 pos = new Vector2(3, 5);
-            testMov.TranslateObject(pos);
+            testMov.OverrideTranslateObject(pos);
             yield return new WaitUntil(() => !testMov.IsMoving);
             Debug.Log(testObj.transform.position);
             Assert.That(Vector2.Distance((Vector2)testObj.transform.position, pos), Is.LessThan(0.1));
@@ -36,7 +36,7 @@ namespace Tests
         public IEnumerator _02_stopMovement()
         {   
             Vector2 pos = new Vector2(99, 99);
-            testMov.TranslateObject(pos);
+            testMov.OverrideTranslateObject(pos);
             yield return new WaitForFixedUpdate();
             yield return new WaitForSeconds(1.5f);
             testMov.StopMovement();
@@ -45,10 +45,10 @@ namespace Tests
             Assert.That(afterStopPos, Is.EqualTo((Vector2)testObj.transform.position));
         }
         [UnityTest]
-        public IEnumerator _03_MovementQueue()
+        public IEnumerator _03_01_MovementQueue()
         {
             Vector2 firstMove = new Vector2(5,5);
-            testMov.TranslateObject(firstMove);
+            testMov.OverrideTranslateObject(firstMove);
             Vector2 seconMove = new Vector2(-9,-10);
             testMov.addMove(seconMove);
             yield return new WaitForFixedUpdate();
@@ -58,11 +58,30 @@ namespace Tests
             Assert.That(Vector2.Distance(testObj.transform.position, seconMove), Is.LessThanOrEqualTo(0.1));
         }
         [UnityTest]
+        public IEnumerator _03_02_MovementQueueRunningKeepMovingTillQueueEmpty()
+        {
+            Vector2 firstMove = new Vector2(5,5);
+            testMov.OverrideTranslateObject(firstMove);
+            Vector2 seconMove = new Vector2(-9,-10);
+            Vector2 thirdMove = new Vector2(10,0);
+            testMov.addMove(seconMove);
+            testMov.addMove(thirdMove);
+            int currentPendingMove = testMov.PendingMove;
+            yield return new WaitForFixedUpdate();
+            yield return new WaitUntil(()=>testMov.PendingMove != currentPendingMove);
+            currentPendingMove = testMov.PendingMove;
+            Assert.That(Vector2.Distance(testObj.transform.position, firstMove), Is.LessThanOrEqualTo(0.2));
+            yield return new WaitUntil(()=>testMov.PendingMove != currentPendingMove);
+            Assert.That(Vector2.Distance(testObj.transform.position, seconMove), Is.LessThanOrEqualTo(0.2));
+            yield return new WaitUntil(()=> !testMov.IsMoving);
+            Assert.That(Vector2.Distance(testObj.transform.position, thirdMove), Is.LessThanOrEqualTo(0.1));
+        }
+        [UnityTest]
         public IEnumerator _04_stopMovementAlsoStopQueueMovement()
         {   
             Vector2 pos = new Vector2(99, 99);
             Vector2 seconMove = new Vector2(-9,-10);
-            testMov.TranslateObject(pos);
+            testMov.OverrideTranslateObject(pos);
             testMov.addMove(seconMove);
             yield return new WaitForFixedUpdate();
             yield return new WaitForSeconds(3.5f);
@@ -80,11 +99,11 @@ namespace Tests
             Vector2 seconMove = new Vector2(-9,-10);
             Vector2 thirdMove = new Vector2(-3,-7);
 
-            testMov.TranslateObject(pos);
+            testMov.OverrideTranslateObject(pos);
             testMov.addMove(seconMove);
             yield return new WaitForFixedUpdate();
             yield return new WaitForSeconds(1.5f);
-            testMov.TranslateObject(thirdMove);
+            testMov.OverrideTranslateObject(thirdMove);
             Assert.That(testMov.PendingMove, Is.EqualTo(0));
             yield return new WaitUntil(()=>!testMov.IsMoving);
             Assert.That(Vector2.Distance(testObj.transform.position, thirdMove), Is.LessThan(0.1));
