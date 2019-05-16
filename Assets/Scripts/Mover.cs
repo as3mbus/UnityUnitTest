@@ -37,10 +37,15 @@ public class Mover : MonoBehaviour
     }
     public void StopMovement()
     {
-        if (PendingMove > 0)
-            StopCoroutine(moveQueueCoroutine);
         if (IsMoving)
+        {
+            if (moveQueueCoroutine != null)
+            {
+                StopCoroutine(moveQueueCoroutine);
+                moveQueueCoroutine = null;
+            }
             StopCoroutine(moveCoroutine);
+        }
         while(marksQueue.Count > 0)
             Destroy(marksQueue.Dequeue());
         movementQueue.Clear();
@@ -50,7 +55,7 @@ public class Mover : MonoBehaviour
     {
         marksQueue.Enqueue(Instantiate(MoveMark,mvmt, Quaternion.identity));
         movementQueue.Enqueue(mvmt);
-        if (PendingMove == 1)
+        if (moveQueueCoroutine == null)
             moveQueueCoroutine = StartCoroutine(runMovementQueue());
     }
     IEnumerator runMovementQueue()
@@ -61,5 +66,6 @@ public class Mover : MonoBehaviour
                 moveCoroutine = (StartCoroutine(translateObject(movementQueue.Dequeue())));
             yield return moveCoroutine;
         }
+        moveQueueCoroutine = null;
     }
 }

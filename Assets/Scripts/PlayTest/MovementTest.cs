@@ -30,7 +30,6 @@ namespace Tests
             Vector2 pos = new Vector2(3, 5);
             testMov.OverrideTranslateObject(pos);
             yield return new WaitUntil(() => !testMov.IsMoving);
-            Debug.Log(testObj.transform.position);
             Assert.That(Vector2.Distance((Vector2)testObj.transform.position, pos), Is.LessThan(0.1));
         }
         [UnityTest]
@@ -141,6 +140,17 @@ namespace Tests
             Vector2 pos = new Vector2(10, 10);
             testMov.addMove(pos);
             Assert.That(GameObject.Find(testMov.MoveMark.name + clonePostFix), Is.Not.Null);
+        }
+        [Test]
+        public IEnumerator _10_MoveQueueCleanUpTheirMarks()
+        {
+            Vector2 pos = new Vector2(10, 10);
+            testMov.addMove(pos);
+            testMov.addMove(new Vector2(0,5));
+            testMov.addMove(new Vector2(3,9));
+            testMov.addMove(new Vector2(10,0));
+            yield return new WaitUntil(() => !testMov.IsMoving);
+            Assert.That(GameObject.Find(testMov.MoveMark.name + clonePostFix), Is.Null);
         }
     }
 }
