@@ -1,0 +1,22 @@
+# These are the options used
+# to compile full.dll
+
+# Output target and name.
+/t:library 
+/out:D:\Projects\Unity\TestProjects\Builds\full.dll
+/debug
+
+# links
+#/lib:D:\
+#/lib:D:\Software-Req\Unity3D\2018.3.11f1\Editor\Data\PlaybackEngines
+#Software-Req\Unity3D\2018.3.11f1\
+/lib:D:\Software-Req\Unity3D\2018.3.11f1\Editor\Data\Managed\
+/lib:D:\Software-Req\Unity3D\2018.3.11f1\Editor\Data\MonoBleedingEdge\lib\mono\4.5\
+/lib:D:\Software-Req\Unity3D\2018.3.11f1\Editor\Data\il2cpp\build
+/lib:D:\Software-Req\Unity3D\2018.3.11f1\Editor\Data\UnityExtensions\Unity\TestRunner
+/r:nunit.framework.dll;nunit.core.dll;nunit.core.interfaces.dll;Mono.Cecil.dll;Mono.Cecil.Mdb.dll;UnityEngine.dll;UnityEngine.TestRunner.dll
+#PlayMaker.dll;HOTween.dll;NSubstitute.dll
+
+/recurse:D:\Projects\Unity\TestProjects\Assets\*.cs
+/recurse:D:\Projects\Unity\TestProjects\Assets\Scripts\PlayTest\*.cs
+/recurse:D:\Projects\Unity\TestProjects\Assets\Scripts\EditTest\*.cs
