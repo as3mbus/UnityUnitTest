@@ -196,8 +196,29 @@ or
 +---------+------+--------+--------+
 ```
 
+### I'm running out of option
+
+After several hour researching in internet exhaust me out of any option possible to expand any more way to enable nunit test into unity (especially if we are going to use unity test runner). here's the reason:
+
+#### Unity Test Runner doesn't use NUnit Test Framework
+
+instead they made custom NUnit framework called [Unity Test Framework][UnityTestFrameworkManualPage]. This framework behave differently from NUnit Framework thus wont make any NUnit test adapter working in any way possible (unless unity publish how their test framework are working). By making NUnit test adapter not able to recognize their test it render all code coverage tool that work with NUnit useless. The reason behind it is most code coverage tool depends on their ability to inject NUnit Test process, when unity test aren't recognized with NUnit Framework resulting adapter wont run any Unity Test and any code coverage tool can't inject unity with any calculation metric. using [coverlet][coverletGithubPage] global tool also not possible since with different nunit framework, makes test run by unity doesn't recognized as any NUnit test.
+
+#### Possible chance using Hard Option
+
+##### compiling script one by one referencing their needs and dividing their usage
+
+this is one tedious process which probably hard to be done, especially without implemented assembly definition that group script and their reference. even with it does we still need to compile it outside unity and not using provided csproj referencing only some of unity component. later we compile the test outside of unity environment using nunit framework and run it with it as well
+
+##### creating library (plugin) based development system
+
+Unity is able to read dll file as plugin including c#, and by doing so unity give an option to use provided `unityengine.dll` to build plugin with their dll containing custom api. this way we can make [unity related library][unityDocManagedPluginPage] outside of unity environment and test it externally. This option have big flaw as developer need to develop plugin/ library first outside of unity implementing their component before moving it to unity environment as dll. it enable nunit testing and a possibility that nunit test adapter able to discover it.
+
 ### what next
 
 next experiment that are going to be done is probably compiling file by file slowly
 
 [forceInjectCsprojImg]: ./img/force_inject_csproj.png
+[UnityTestFrameworkManualPage]: (https://docs.unity3d.com/Packages/com.unity.test-framework@1.0/manual/index.html)
+[coverletGithubPage]: https://github.com/tonerdo/coverlet
+[unityDocManagedPluginPage]: https://docs.unity3d.com/Manual/UsingDLL.html
